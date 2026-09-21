@@ -1,0 +1,279 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import TraceViz from '../../components/TraceViz.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+
+const statusLabel: Record<string, string> = {
+  'open-source': 'Open Source',
+  private: 'Private',
+  prototype: 'Prototype',
+};
+
+const statusColor: Record<string, string> = {
+  'open-source': 'text-sky-400 bg-sky-500/10 border-sky-500/20',
+  private: 'text-zinc-400 bg-zinc-800/60 border-zinc-700',
+  prototype: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+};
+---
+
+<BaseLayout
+  title={`${project.data.title} — Nicolas Mathieu`}
+  description={project.data.description}
+>
+  <Nav currentPath={`/projects/${project.slug}`} />
+
+  <main class="pt-14">
+    <!-- Header -->
+    <header class="border-b border-zinc-800 py-16">
+      <div class="max-w-6xl mx-auto px-6">
+        <a
+          href="/#work"
+          class="font-mono text-xs text-zinc-500 hover:text-zinc-300 transition-colors mb-8 inline-flex items-center gap-2"
+        >
+          ← Back
+        </a>
+        <div class="grid lg:grid-cols-[1fr_auto] gap-8 items-start mt-6">
+          <div>
+            <div class="flex flex-wrap items-center gap-3 mb-4">
+              <h1 class="text-4xl lg:text-5xl font-bold text-zinc-50 tracking-tight">
+                {project.data.title}
+              </h1>
+              <span
+                class={`font-mono text-xs border px-2 py-0.5 rounded-full self-center ${statusColor[project.data.status]}`}
+              >
+                {statusLabel[project.data.status]}
+              </span>
+            </div>
+            <p class="text-lg text-zinc-300 max-w-2xl leading-relaxed mb-6">
+              {project.data.subtitle}
+            </p>
+
+            <!-- Concepts -->
+            <div class="flex flex-wrap gap-2 mb-4">
+              {
+                project.data.concepts.map((c) => (
+                  <span class="font-mono text-xs text-sky-400/80 bg-sky-500/5 border border-sky-500/15 px-2 py-0.5 rounded">
+                    {c}
+                  </span>
+                ))
+              }
+            </div>
+
+            <!-- Tech -->
+            <div class="flex flex-wrap gap-2">
+              {
+                project.data.tech.map((t) => (
+                  <span class="font-mono text-xs text-zinc-500 bg-zinc-900 border border-zinc-800 px-2 py-0.5 rounded">
+                    {t}
+                  </span>
+                ))
+              }
+            </div>
+          </div>
+
+          <!-- Links -->
+          <div class="flex flex-col gap-3">
+            {
+              project.data.github && (
+                <a
+                  href={project.data.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="font-mono text-sm text-sky-400 border border-sky-500/30 hover:bg-sky-500/10 transition-colors px-4 py-2 rounded text-center"
+                >
+                  GitHub →
+                </a>
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Trace visualization for agentobs -->
+    {
+      project.slug === 'agentobs' && (
+        <div class="border-b border-zinc-800 bg-zinc-900/30">
+          <div class="max-w-6xl mx-auto px-6 py-12">
+            <p class="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-6">
+              Live trace output
+            </p>
+            <div class="max-w-lg">
+              <TraceViz />
+              <p class="font-mono text-xs text-zinc-600 mt-3">
+                An agent_run assembled from SSE stream events — retrieve, llm_call, and evaluate
+                spans with Core7 policy verdict.
+              </p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    <!-- Content -->
+    <article class="max-w-3xl mx-auto px-6 py-16 prose-custom">
+      <Content />
+    </article>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style is:global>
+  .prose-custom h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fafafa;
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+    padding-top: 2rem;
+    border-top: 1px solid #27272a;
+  }
+
+  .prose-custom h2:first-child {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  .prose-custom h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #e4e4e7;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .prose-custom p {
+    font-size: 0.9375rem;
+    color: #a1a1aa;
+    line-height: 1.75;
+    margin-bottom: 1rem;
+  }
+
+  .prose-custom ul {
+    margin-bottom: 1rem;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .prose-custom ul li {
+    font-size: 0.9375rem;
+    color: #a1a1aa;
+    line-height: 1.75;
+    padding-left: 1.25rem;
+    position: relative;
+    margin-bottom: 0.375rem;
+  }
+
+  .prose-custom ul li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: #3f3f46;
+  }
+
+  .prose-custom strong {
+    color: #d4d4d8;
+    font-weight: 600;
+  }
+
+  .prose-custom code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8125rem;
+    background: #18181b;
+    border: 1px solid #27272a;
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    color: #38bdf8;
+  }
+
+  .prose-custom pre {
+    background: #0f1117;
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+
+  .prose-custom pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 0.8125rem;
+    color: #e2e8f0;
+    line-height: 1.6;
+  }
+
+  .prose-custom table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    margin: 1.5rem 0;
+  }
+
+  .prose-custom th {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #71717a;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #27272a;
+  }
+
+  .prose-custom td {
+    padding: 0.625rem 1rem;
+    color: #a1a1aa;
+    border-bottom: 1px solid #18181b;
+    font-size: 0.875rem;
+  }
+
+  .prose-custom td:first-child {
+    font-family: 'JetBrains Mono', monospace;
+    color: #38bdf8;
+    font-size: 0.8125rem;
+  }
+
+  .prose-custom blockquote {
+    border-left: 2px solid #38bdf8;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    color: #71717a;
+    font-style: italic;
+  }
+
+  .prose-custom a {
+    color: #38bdf8;
+    text-decoration: none;
+  }
+
+  .prose-custom a:hover {
+    color: #7dd3fc;
+  }
+
+  .prose-custom hr {
+    border: none;
+    border-top: 1px solid #27272a;
+    margin: 2rem 0;
+  }
+</style>

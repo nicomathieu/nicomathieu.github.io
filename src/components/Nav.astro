@@ -1,0 +1,42 @@
+---
+interface Props {
+  currentPath?: string;
+}
+const { currentPath = '/' } = Astro.props;
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800/60 bg-zinc-950/90 backdrop-blur-sm">
+  <nav class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+    <a href="/" class="font-mono text-sm font-medium text-zinc-50 hover:text-sky-400 transition-colors tracking-tight">
+      nm
+    </a>
+
+    <!-- Desktop links -->
+    <ul class="hidden sm:flex items-center gap-8">
+      <li><a href="/#work"       class="text-sm text-zinc-400 hover:text-zinc-50 transition-colors">Work</a></li>
+      <li><a href="/#writing"    class="text-sm text-zinc-400 hover:text-zinc-50 transition-colors">Writing</a></li>
+      <li><a href="/#experience" class="text-sm text-zinc-400 hover:text-zinc-50 transition-colors">Experience</a></li>
+      <li>
+        <a href="mailto:nico.mathieu2@gmail.com"
+           class="text-sm font-mono text-sky-400 hover:text-sky-300 transition-colors">
+          Contact →
+        </a>
+      </li>
+    </ul>
+
+    <!-- Mobile: contact link only in header bar -->
+    <a href="mailto:nico.mathieu2@gmail.com"
+       class="sm:hidden font-mono text-sm text-sky-400 hover:text-sky-300 transition-colors">
+      Contact →
+    </a>
+  </nav>
+
+  <!-- Mobile secondary nav -->
+  <div class="sm:hidden border-t border-zinc-800/40">
+    <div class="max-w-6xl mx-auto px-6 py-2 flex gap-6">
+      <a href="/#work"       class="text-xs text-zinc-500 hover:text-zinc-300 transition-colors">Work</a>
+      <a href="/#writing"    class="text-xs text-zinc-500 hover:text-zinc-300 transition-colors">Writing</a>
+      <a href="/#experience" class="text-xs text-zinc-500 hover:text-zinc-300 transition-colors">Experience</a>
+    </div>
+  </div>
+</header>

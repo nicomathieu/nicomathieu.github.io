@@ -1,0 +1,233 @@
+---
+// Decorative trace visualization showing a typed AgentRun assembled from SSE events.
+// Spans are proportional to actual agentobs output timings.
+---
+
+<div class="trace-viz font-mono select-none" aria-hidden="true">
+  <div class="trace-header">
+    <span class="trace-label">agent run trace</span>
+    <span class="trace-label">247ms total</span>
+  </div>
+
+  <div class="trace-spans">
+    <!-- agent_run — root span -->
+    <div class="span-row">
+      <div class="span-name-col">
+        <span class="span-name root">agent_run</span>
+      </div>
+      <div class="span-track-col">
+        <div class="span-track">
+          <div class="span-bar root" style="left:0%;width:100%;"></div>
+        </div>
+      </div>
+      <div class="span-dur-col"><span class="span-dur">247ms</span></div>
+    </div>
+
+    <!-- separator -->
+    <div class="sep"></div>
+
+    <!-- retrieve -->
+    <div class="span-row">
+      <div class="span-name-col">
+        <span class="tree-sym">├─</span>
+        <span class="span-name retrieve">retrieve</span>
+      </div>
+      <div class="span-track-col">
+        <div class="span-track">
+          <div class="span-bar retrieve" style="left:0%;width:22%;"></div>
+        </div>
+      </div>
+      <div class="span-dur-col"><span class="span-dur dim">38ms</span></div>
+    </div>
+
+    <!-- llm_call -->
+    <div class="span-row">
+      <div class="span-name-col">
+        <span class="tree-sym">├─</span>
+        <span class="span-name llm">llm_call</span>
+      </div>
+      <div class="span-track-col">
+        <div class="span-track">
+          <div class="span-bar llm" style="left:24%;width:42%;"></div>
+        </div>
+      </div>
+      <div class="span-dur-col"><span class="span-dur dim">103ms</span></div>
+    </div>
+
+    <!-- evaluate -->
+    <div class="span-row">
+      <div class="span-name-col">
+        <span class="tree-sym">└─</span>
+        <span class="span-name evaluate">evaluate</span>
+      </div>
+      <div class="span-track-col">
+        <div class="span-track">
+          <div class="span-bar evaluate" style="left:68%;width:20%;"></div>
+        </div>
+      </div>
+      <div class="span-dur-col"><span class="span-dur dim">28ms</span></div>
+    </div>
+  </div>
+
+  <!-- Metrics row -->
+  <div class="metrics-row">
+    <div class="metric">
+      <span class="metric-key">tools</span>
+      <span class="metric-val">2</span>
+    </div>
+    <div class="metric">
+      <span class="metric-key">contexts</span>
+      <span class="metric-val">5</span>
+    </div>
+    <div class="metric">
+      <span class="metric-key">tokens</span>
+      <span class="metric-val">847</span>
+    </div>
+    <div class="metric">
+      <span class="metric-key">verdict</span>
+      <span class="metric-val pass">pass</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .trace-viz {
+    background: #0c0f18;
+    border: 1px solid #1a2535;
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .trace-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #1a2535;
+  }
+
+  .trace-label {
+    color: #334155;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 9px;
+  }
+
+  .trace-spans {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .span-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 38px;
+    gap: 8px;
+    align-items: center;
+    height: 20px;
+  }
+
+  .span-name-col {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    overflow: hidden;
+  }
+
+  .tree-sym {
+    color: #1e3050;
+    flex-shrink: 0;
+    font-size: 10px;
+  }
+
+  .span-name {
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .span-name.root     { color: #38bdf8; }
+  .span-name.retrieve { color: #fb923c; }
+  .span-name.llm      { color: #4ade80; }
+  .span-name.evaluate { color: #a78bfa; }
+
+  .span-track-col {
+    min-width: 0;
+  }
+
+  .span-track {
+    position: relative;
+    height: 12px;
+    background: #111a27;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .span-bar {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    border-radius: 2px;
+  }
+
+  .span-bar.root     { background: rgba(56,189,248,0.2); width: 100%; }
+  .span-bar.retrieve { background: #fb923c; }
+  .span-bar.llm      { background: #4ade80; }
+  .span-bar.evaluate { background: #a78bfa; }
+
+  .span-dur-col {
+    text-align: right;
+  }
+
+  .span-dur {
+    font-size: 10px;
+    color: #38bdf8;
+    white-space: nowrap;
+  }
+
+  .span-dur.dim {
+    color: #2d4a66;
+  }
+
+  .sep {
+    height: 1px;
+    background: #111a27;
+    margin: 2px 0;
+  }
+
+  .metrics-row {
+    display: flex;
+    gap: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #1a2535;
+    flex-wrap: wrap;
+  }
+
+  .metric {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .metric-key {
+    color: #1e3050;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .metric-val {
+    color: #2d4a66;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .metric-val.pass {
+    color: #4ade80;
+  }
+</style>

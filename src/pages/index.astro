@@ -1,0 +1,502 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import TraceViz from '../components/TraceViz.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('projects');
+const projects = allProjects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const statusLabel: Record<string, string> = {
+  'open-source': 'Open Source',
+  private: 'Private',
+  prototype: 'Prototype',
+};
+
+const statusColor: Record<string, string> = {
+  'open-source': 'text-sky-400 bg-sky-500/10 border-sky-500/20',
+  private: 'text-zinc-400 bg-zinc-800/60 border-zinc-700',
+  prototype: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+};
+---
+
+<BaseLayout title="Nicolas Mathieu — Senior GenAI Engineer">
+  <Nav currentPath="/" />
+
+  <main class="pt-14 sm:pt-14">
+    <!-- ─── HERO ─── -->
+    <section class="min-h-screen flex items-center border-b border-zinc-800">
+      <div class="max-w-6xl mx-auto px-6 w-full py-24">
+        <div class="grid lg:grid-cols-[3fr_2fr] gap-16 xl:gap-24 items-center">
+          <!-- Left: content -->
+          <div>
+            <p class="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-8 flex items-center gap-2">
+              <span class="inline-block w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+              Senior GenAI Engineer · Barcelona
+            </p>
+
+            <h1 class="text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight leading-none mb-8 text-zinc-50">
+              Nicolas<br />Mathieu
+            </h1>
+
+            <p class="text-lg text-zinc-300 leading-relaxed max-w-xl mb-8">
+              Production AI systems fail in ways that are hard to detect. I build the
+              infrastructure to make them measurable — tracing agent runs, evaluating retrieval
+              quality, and versioning evaluation frameworks that catch regressions before they reach
+              users.
+            </p>
+
+            <div class="flex flex-wrap gap-2 mb-10">
+              {
+                ['LLM', 'RAG', 'Agent Observability', 'Evaluation', 'Production AI'].map((tag) => (
+                  <span class="font-mono text-xs text-zinc-400 border border-zinc-800 px-3 py-1 rounded-full">
+                    {tag}
+                  </span>
+                ))
+              }
+            </div>
+
+            <div class="flex items-center gap-6">
+              <a
+                href="https://github.com/nicomathieu"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="font-mono text-sm text-sky-400 hover:text-sky-300 transition-colors flex items-center gap-1.5"
+              >
+                GitHub →
+              </a>
+              <a
+                href="mailto:nico.mathieu2@gmail.com"
+                class="font-mono text-sm text-zinc-400 hover:text-zinc-50 transition-colors"
+              >
+                nico.mathieu2@gmail.com
+              </a>
+            </div>
+          </div>
+
+          <!-- Right: trace visualization -->
+          <div class="hidden lg:block">
+            <TraceViz />
+            <p class="font-mono text-xs text-zinc-600 mt-3 pl-1">
+              agentobs · live agent run trace
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── WHAT I WORK ON ─── -->
+    <section id="focus" class="py-24 border-b border-zinc-800">
+      <div class="max-w-6xl mx-auto px-6">
+        <p class="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-12">What I work on</p>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-zinc-800">
+          {
+            [
+              {
+                label: 'Build',
+                headline: 'Production AI systems',
+                body: 'RAG pipelines, document intelligence agents, NL-to-SQL interfaces, and agentic workflows deployed at enterprise scale.',
+              },
+              {
+                label: 'Observe',
+                headline: 'Agent observability',
+                body: 'Tracing agent runs, tool calls, and retrieval chains with OpenTelemetry. Making visible what agents actually do in production.',
+              },
+              {
+                label: 'Evaluate',
+                headline: 'Evaluation frameworks',
+                body: 'LLM-as-judge pipelines, retrieval metrics (nDCG, MRR, Hit@k), versioned golden datasets, and online production sampling.',
+              },
+              {
+                label: 'Improve',
+                headline: 'AI reliability',
+                body: 'Using evaluation evidence to catch regressions before they reach users. Versioned policy thresholds, structured verdicts, and reproducible benchmarks.',
+              },
+            ].map((pillar) => (
+              <div class="bg-zinc-950 p-8">
+                <p class="font-mono text-xs text-sky-400 uppercase tracking-widest mb-4">
+                  {pillar.label}
+                </p>
+                <h3 class="text-base font-semibold text-zinc-50 mb-3">{pillar.headline}</h3>
+                <p class="text-sm text-zinc-400 leading-relaxed">{pillar.body}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SELECTED WORK ─── -->
+    <section id="work" class="py-24 border-b border-zinc-800">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="flex items-baseline justify-between mb-12">
+          <p class="font-mono text-xs text-zinc-500 uppercase tracking-widest">Selected work</p>
+        </div>
+
+        <div class="space-y-px bg-zinc-800">
+          {
+            projects.map((project, i) => (
+              <div class="group bg-zinc-950 p-8 hover:bg-zinc-900 transition-colors">
+                <div class="grid lg:grid-cols-[auto_1fr_auto] gap-6 lg:gap-10 items-start">
+                  <!-- Number -->
+                  <p class="font-mono text-4xl font-bold text-zinc-800 group-hover:text-zinc-700 transition-colors leading-none pt-1 hidden lg:block">
+                    {String(i + 1).padStart(2, '0')}
+                  </p>
+
+                  <!-- Content -->
+                  <div>
+                    <div class="flex flex-wrap items-center gap-3 mb-3">
+                      <h3 class="text-xl font-bold text-zinc-50">{project.data.title}</h3>
+                      <span
+                        class={`font-mono text-xs border px-2 py-0.5 rounded-full ${statusColor[project.data.status]}`}
+                      >
+                        {statusLabel[project.data.status]}
+                      </span>
+                    </div>
+
+                    <p class="text-zinc-400 text-sm mb-1 font-medium">{project.data.subtitle}</p>
+                    <p class="text-zinc-300 text-sm leading-relaxed max-w-2xl mb-5">
+                      {project.data.description}
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-3">
+                      <div class="flex flex-wrap gap-1.5">
+                        {project.data.concepts.map((c) => (
+                          <span class="font-mono text-xs text-sky-400/80 bg-sky-500/5 border border-sky-500/15 px-2 py-0.5 rounded">
+                            {c}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-1.5 mt-2">
+                      {project.data.tech.map((t) => (
+                        <span class="font-mono text-xs text-zinc-500 bg-zinc-900 border border-zinc-800 px-2 py-0.5 rounded">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <!-- Links -->
+                  <div class="flex flex-col gap-3 lg:text-right">
+                    <a
+                      href={`/projects/${project.slug}`}
+                      class="font-mono text-sm text-zinc-300 hover:text-sky-400 transition-colors whitespace-nowrap"
+                    >
+                      Case study →
+                    </a>
+                    {project.data.github && (
+                      <a
+                        href={project.data.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="font-mono text-sm text-zinc-500 hover:text-zinc-300 transition-colors whitespace-nowrap"
+                      >
+                        GitHub →
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── WRITING ─── -->
+    <section id="writing" class="py-24 border-b border-zinc-800">
+      <div class="max-w-6xl mx-auto px-6">
+        <p class="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-12">Writing</p>
+
+        <div class="bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors rounded-lg p-8 max-w-2xl group">
+          <p class="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-4">Medium · 2026</p>
+          <h3 class="text-lg font-semibold text-zinc-50 mb-3 group-hover:text-sky-300 transition-colors">
+            How I Built an LLM Agent That Actually Fills Word Documents
+          </h3>
+          <p class="text-sm text-zinc-400 leading-relaxed mb-6">
+            The engineering behind filling regulated clinical documents with an LLM — from AST-based
+            DOCX parsing and stable element IDs to run-level formatting preservation and MCP tool
+            architecture. From proprietary enterprise pipeline to a 5-file open-source demo.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-6">
+            {
+              ['Document Intelligence', 'AST', 'MCP Tools', 'DOCX', 'Regulated AI'].map((tag) => (
+                <span class="font-mono text-xs text-zinc-500 border border-zinc-800 px-2 py-0.5 rounded">
+                  {tag}
+                </span>
+              ))
+            }
+          </div>
+          <!-- Replace href with actual Medium URL when published -->
+          <a
+            href="#"
+            class="font-mono text-sm text-sky-400 hover:text-sky-300 transition-colors"
+          >
+            Read on Medium →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SKILLS ─── -->
+    <section id="skills" class="py-24 border-b border-zinc-800">
+      <div class="max-w-6xl mx-auto px-6">
+        <p class="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-12">Technical skills</p>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {
+            [
+              {
+                category: 'AI / LLM',
+                items: [
+                  'LLM evaluation',
+                  'RAG',
+                  'Agentic AI',
+                  'Prompt engineering',
+                  'Structured generation',
+                  'SSE streaming',
+                  'DSPy',
+                  'LangChain',
+                ],
+              },
+              {
+                category: 'Evaluation',
+                items: [
+                  'LLM-as-judge',
+                  'DeepEval',
+                  'Core7 metrics',
+                  'Golden datasets',
+                  'Online sampling',
+                  'A/B testing',
+                  'Retrieval metrics',
+                  'nDCG · MRR · Hit@k',
+                ],
+              },
+              {
+                category: 'Observability',
+                items: [
+                  'OpenTelemetry',
+                  'Distributed tracing',
+                  'Agent run tracing',
+                  'LangSmith · Langfuse',
+                  'AgentOps',
+                  'Telemetry',
+                ],
+              },
+              {
+                category: 'Engineering',
+                items: [
+                  'Python 3.11+',
+                  'FastAPI',
+                  'Airflow',
+                  'OpenSearch',
+                  'DuckDB',
+                  'AWS Bedrock',
+                  'GCP Vertex AI',
+                  'Snowflake Cortex',
+                ],
+              },
+            ].map((group) => (
+              <div>
+                <p class="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-5">
+                  {group.category}
+                </p>
+                <ul class="space-y-2">
+                  {group.items.map((item) => (
+                    <li class="text-sm text-zinc-300">{item}</li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── EXPERIENCE ─── -->
+    <section id="experience" class="py-24 border-b border-zinc-800">
+      <div class="max-w-6xl mx-auto px-6">
+        <p class="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-12">Experience</p>
+
+        <div class="space-y-12">
+          <!-- AstraZeneca -->
+          <div class="grid lg:grid-cols-[200px_1fr] gap-6">
+            <div>
+              <p class="font-mono text-xs text-zinc-500 mb-1">Sep 2024 – Present</p>
+              <p class="font-mono text-xs text-sky-400">AstraZeneca · Alexion</p>
+              <p class="font-mono text-xs text-zinc-600">Barcelona</p>
+            </div>
+            <div>
+              <h3 class="text-base font-semibold text-zinc-50 mb-4">
+                Data Science Manager — GenAI Platform Lead
+              </h3>
+              <ul class="space-y-2 text-sm text-zinc-300 leading-relaxed">
+                <li class="flex gap-3">
+                  <span class="text-zinc-600 mt-1 shrink-0">—</span>
+                  <span>
+                    Led end-to-end delivery of a GenAI research assistant adopted by 1,000+ scientists
+                    across global R&D teams — cutting document search time by 70% (AWS Bedrock, Claude,
+                    OpenSearch, FastAPI).
+                  </span>
+                </li>
+                <li class="flex gap-3">
+                  <span class="text-zinc-600 mt-1 shrink-0">—</span>
+                  <span>
+                    Designed an AgentOps evaluation framework standardized across projects — LLM-as-judge
+                    across 4 quality dimensions with versioned golden datasets, enabling regression detection
+                    before every production release.
+                  </span>
+                </li>
+                <li class="flex gap-3">
+                  <span class="text-zinc-600 mt-1 shrink-0">—</span>
+                  <span>
+                    Architected an Airflow-orchestrated ETL pipeline for clinical document ingestion —
+                    OCR-based table extraction reducing manual processing time by 60% for 3 continents.
+                  </span>
+                </li>
+                <li class="flex gap-3">
+                  <span class="text-zinc-600 mt-1 shrink-0">—</span>
+                  <span>
+                    Developed a GenAI supply chain BI solution enabling procurement analysts to cut search
+                    and analysis time by 80% (Snowflake Cortex, Streamlit).
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="border-t border-zinc-800/60"></div>
+
+          <!-- Artefact -->
+          <div class="grid lg:grid-cols-[200px_1fr] gap-6">
+            <div>
+              <p class="font-mono text-xs text-zinc-500 mb-1">Apr 2021 – Sep 2024</p>
+              <p class="font-mono text-xs text-sky-400">Artefact</p>
+              <p class="font-mono text-xs text-zinc-600">Paris & Dubai</p>
+            </div>
+            <div>
+              <h3 class="text-base font-semibold text-zinc-50 mb-4">
+                Senior Data Scientist — AI Consultant
+              </h3>
+              <div class="space-y-5 text-sm text-zinc-300 leading-relaxed">
+                <div>
+                  <p class="font-mono text-xs text-zinc-500 mb-2">Orange · 2024</p>
+                  <ul class="space-y-1.5">
+                    <li class="flex gap-3">
+                      <span class="text-zinc-600 mt-1 shrink-0">—</span>
+                      <span>Built a Smart Shopping Assistant using LangChain and GPT-4, integrated with live product catalogs via REST APIs — reducing support tickets by 35%.</span>
+                    </li>
+                    <li class="flex gap-3">
+                      <span class="text-zinc-600 mt-1 shrink-0">—</span>
+                      <span>Developed automated knowledge base generation pipeline processing 500+ articles with 30% reduction in content creation time (Claude 3.5).</span>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <p class="font-mono text-xs text-zinc-500 mb-2">Samsung · 2023</p>
+                  <ul class="space-y-1.5">
+                    <li class="flex gap-3">
+                      <span class="text-zinc-600 mt-1 shrink-0">—</span>
+                      <span>Deployed production MLOps pipelines streamlining model lifecycle management — reducing deployment cycles by 55% (Airflow, dbt, Vertex AI, GCP).</span>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <p class="font-mono text-xs text-zinc-500 mb-2">L'Oréal · 2021–2022</p>
+                  <ul class="space-y-1.5">
+                    <li class="flex gap-3">
+                      <span class="text-zinc-600 mt-1 shrink-0">—</span>
+                      <span>Built and deployed a promotion forecasting tool on GCP at scale, predicting promo impacts across 200+ SKUs (Python, dbt, BigQuery).</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-t border-zinc-800/60"></div>
+
+          <!-- Criteo -->
+          <div class="grid lg:grid-cols-[200px_1fr] gap-6">
+            <div>
+              <p class="font-mono text-xs text-zinc-500 mb-1">Jun 2020 – Apr 2021</p>
+              <p class="font-mono text-xs text-sky-400">Criteo</p>
+              <p class="font-mono text-xs text-zinc-600">Barcelona</p>
+            </div>
+            <div>
+              <h3 class="text-base font-semibold text-zinc-50 mb-3">Data Analyst / Data Scientist</h3>
+              <p class="text-sm text-zinc-300 leading-relaxed">
+                Designed A/B testing frameworks for ML model evaluation across 15+ verticals (Python, Fivetran).
+              </p>
+            </div>
+          </div>
+
+          <div class="border-t border-zinc-800/60"></div>
+
+          <!-- IBM -->
+          <div class="grid lg:grid-cols-[200px_1fr] gap-6">
+            <div>
+              <p class="font-mono text-xs text-zinc-500 mb-1">Mar 2018 – May 2020</p>
+              <p class="font-mono text-xs text-sky-400">IBM</p>
+              <p class="font-mono text-xs text-zinc-600">Paris</p>
+            </div>
+            <div>
+              <h3 class="text-base font-semibold text-zinc-50 mb-1">Data Analyst Apprenticeship</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Education -->
+        <div class="mt-16 pt-8 border-t border-zinc-800">
+          <p class="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-8">Education</p>
+          <div class="grid sm:grid-cols-2 gap-6">
+            <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+              <p class="font-mono text-xs text-zinc-500 mb-2">2014 – 2017</p>
+              <h4 class="text-sm font-semibold text-zinc-50 mb-1">
+                MSc Engineering — HPC & Applied Mathematics
+              </h4>
+              <p class="font-mono text-xs text-sky-400">Centrale Nantes</p>
+            </div>
+            <div class="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+              <p class="font-mono text-xs text-zinc-500 mb-2">2017 – 2020</p>
+              <h4 class="text-sm font-semibold text-zinc-50 mb-1">
+                MSc Management — Business Analytics & Data Science
+              </h4>
+              <p class="font-mono text-xs text-sky-400">ESSEC Business School</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CONTACT ─── -->
+    <section id="contact" class="py-24">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="max-w-lg">
+          <p class="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-6">Contact</p>
+          <h2 class="text-3xl font-bold text-zinc-50 mb-6">
+            Building something that needs to work reliably?
+          </h2>
+          <p class="text-zinc-300 text-base leading-relaxed mb-8">
+            I'm interested in senior AI engineering roles and consulting engagements around GenAI platform engineering,
+            LLM evaluation infrastructure, and production observability.
+          </p>
+          <a
+            href="mailto:nico.mathieu2@gmail.com"
+            class="inline-block font-mono text-sm text-sky-400 border border-sky-500/30 hover:bg-sky-500/10 transition-colors px-6 py-3 rounded"
+          >
+            nico.mathieu2@gmail.com →
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>

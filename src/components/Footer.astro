@@ -1,0 +1,31 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-zinc-800 py-12">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+      <div>
+        <p class="font-mono text-sm text-zinc-50 mb-1">Nicolas Mathieu</p>
+        <p class="text-xs text-zinc-500">Senior GenAI Engineer · Barcelona</p>
+      </div>
+      <div class="flex items-center gap-6">
+        <a
+          href="https://github.com/nicomathieu"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm text-zinc-400 hover:text-zinc-50 transition-colors"
+        >
+          GitHub
+        </a>
+        <a
+          href="mailto:nico.mathieu2@gmail.com"
+          class="text-sm text-zinc-400 hover:text-zinc-50 transition-colors"
+        >
+          Email
+        </a>
+      </div>
+    </div>
+    <p class="mt-8 text-xs text-zinc-600 font-mono">© {year}</p>
+  </div>
+</footer>
